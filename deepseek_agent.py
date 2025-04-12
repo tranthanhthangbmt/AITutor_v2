@@ -1,5 +1,6 @@
 import requests
 import os
+import streamlit as st
 
 class DeepSeekAgent:
     def __init__(self):
@@ -22,14 +23,13 @@ class DeepSeekAgent:
         }
 
         response = requests.post(self.api_url, headers=headers, json=payload)
-        response.raise_for_status()
+
         if not response.ok:
-            print("Status code:", response.status_code)
-            print("Response text:", response.text)
-            raise Exception("DeepSeek API Error")
+            st.error(f"❌ DeepSeek API lỗi {response.status_code}")
+            st.code(response.text)
+            return "Xin lỗi, có lỗi xảy ra khi gọi API."
 
         data = response.json()
-
         reply = data["choices"][0]["message"]["content"]
         self.history.append({"role": "assistant", "content": reply})
         return reply
