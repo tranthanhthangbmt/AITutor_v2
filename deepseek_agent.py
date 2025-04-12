@@ -23,6 +23,11 @@ class DeepSeekAgent:
 
         response = requests.post(self.api_url, headers=headers, json=payload)
         response.raise_for_status()
+        if not response.ok:
+            print("Status code:", response.status_code)
+            print("Response text:", response.text)
+            raise Exception("DeepSeek API Error")
+
         data = response.json()
 
         reply = data["choices"][0]["message"]["content"]
